@@ -55,7 +55,7 @@ contract MooniFactory is Ownable {
                 bytes1(0xff),///// or hex'ff'
                 address(this),
                 keccak256(abi.encodePacked(token0, token1)),
-                hex'7863b6a22dd3ddda269bda11a364db9fbedffca3556b74c2899420ca33085caf' // init code hash
+                hex'f6b7a53515d4dff4d63558837a72095dc587e3f77f73911d4ced3c28149f2fcd' // init code hash
             )))));
        
     }

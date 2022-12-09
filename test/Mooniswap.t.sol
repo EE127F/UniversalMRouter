@@ -70,7 +70,7 @@ contract MooniswapTest is Test {
       amountsMin[0] = 8*10**24;
       amountsMin[1] = 8*10**24;
 
-      Mooniswap pool = factory.deploy(token1,token2);
+      Mooniswap pool = Mooniswap(factory.deploy(token1,token2));
       assertEq((pool.getTokens()).length,2);
 
       token1.approve(address(pool),10**30);
@@ -97,7 +97,7 @@ contract MooniswapTest is Test {
       
       RebasingTokenOHM.mint(address(this),10**27);
 
-      Mooniswap pool = factory.deploy(RebasingTokenOHM,RebasingTokenElastic);
+      Mooniswap pool = Mooniswap(factory.deploy(RebasingTokenOHM,RebasingTokenElastic));
       assertEq((pool.getTokens()).length,2);
       
       RebasingTokenOHM.approve(address(pool),10**30);
