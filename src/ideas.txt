@@ -1,0 +1,96 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.0;
+
+import "src/Mooniswap.sol";
+
+contract D {
+    uint public x;
+    constructor(uint a) {
+        x = a;
+    }
+}
+
+contract C {
+    event contractDeployed(address deployment);
+    
+    function createDSalted(bytes32 salt, uint arg) public {
+        // This complicated expression just tells you how the address
+        // can be pre-computed. It is just there for illustration.
+        // You actually only need ``new D{salt: salt}(arg)``.
+        address predictedAddress = address(uint160(uint(keccak256(abi.encodePacked(
+            bytes1(0xff),
+            address(this),
+            salt,
+            keccak256(abi.encodePacked(
+                type(D).creationCode,
+                abi.encode(arg)
+            ))
+        )))));
+
+        D d = new D{salt: salt}(arg);
+        require(address(d) == predictedAddress);
+        emit contractDeployed(address(d));
+    }
+}
+contract D {
+    uint public x;
+    constructor(uint a) {
+        x = a;
+    }
+}
+
+contract CalculateAddress {
+
+  bytes32 constant internal INIT_CODE_HASH = keccak256(type(Mooniswap).creationCode);
+
+  function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {
+        require(tokenA != tokenB, 'UniswapV2Library: IDENTICAL_ADDRESSES');
+        (token0, token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
+        require(token0 != address(0), 'UniswapV2Library: ZERO_ADDRESS');
+    }
+
+ 
+    // bytes32 public DOMAIN_SEPARATOR;
+    // // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+    // bytes32 public constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
+
+        // (IERC20 token1, IERC20 token2) = sortTokens(tokenA, tokenB);
+        // IERC20[] memory tokens = new IERC20[](2);
+        // tokens[0] = token1;
+        // tokens[1] = token2;
+
+        // string memory symbol1 = token1.uniSymbol();
+        // string memory symbol2 = token2.uniSymbol();
+
+
+ //        pool = new Mooniswap(
+ //            tokens,
+ //            string(abi.encodePacked("Mooniswap V1 (", symbol1, "-", symbol2, ")")),
+ //            string(abi.encodePacked("MOON-V1-", symbol1, "-", symbol2))
+ //        );
+ // 
+
+  function pairFor(address tokenA, address tokenB) public view returns (address pair) {
+      (address token0, address token1) = sortTokens(tokenA, tokenB);
+      bytes memory bytecode = type(Mooniswap).creationCode;
+      address predictedAddress = address(uint160(uint(keccak256(abi.encodePacked(
+          bytes1(0xff),
+          address(this),
+          keccak256(abi.encodePacked(token0, token1)),
+          keccak256(abi.encodePacked(
+              type(D).creationCode,
+              abi.encode(arg)
+          ))
+      )))));
+
+      pair = address(uint(keccak256(abi.encodePacked(
+              bytes1(0xff),///// or hex'ff'
+              address(this),
+              keccak256(abi.encodePacked(token0, token1)),
+              keccak256(bytecode)
+               
+          ))));
+     
+  }
+
+}
