@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
-// import "lib/openzeppelin-contracts/contracts/utils/Create2.sol";
+import {Create2} from "src/libraries/Create2.sol";
 import "./libraries/UniERC20.sol";
 import "./Mooniswap.sol";
 import "./interfaces/IMooniswap.sol";
@@ -41,14 +41,14 @@ contract MooniFactory is Ownable {
     function pairFor(address tokenA, address tokenB) public view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
         bytes memory bytecode = type(Mooniswap).creationCode;
-        pair = address(uint160(bytes20(keccak256(abi.encodePacked(
-                bytes1(0xff),///// or hex'ff'
-                address(this),
-                keccak256(abi.encodePacked(token0, token1)),
-                keccak256(bytecode)
-                 
-            )))));
-    }
+ 
+        pair = Create2.computeAddress(
+        keccak256(abi.encodePacked(token0, token1)),
+        keccak256(bytecode),
+        address(this)
+        );  
+      }  
+ 
     function pairFor2(address tokenA, address tokenB) public view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
         pair = address(uint160(bytes20(keccak256(abi.encodePacked(
@@ -74,14 +74,14 @@ contract MooniFactory is Ownable {
         tokens[0] = token1;
         tokens[1] = token2;
 
-        string memory symbol1 = token1.uniSymbol();
-        string memory symbol2 = token2.uniSymbol();
+        // string memory symbol1 = token1.uniSymbol();
+        // string memory symbol2 = token2.uniSymbol();
 
         bytes32 salt = keccak256(abi.encodePacked(token1, token2));
-        bytes memory POOL_NAME = abi.encodePacked("Mooniswap V1 (", symbol1, "-", symbol2, ")");
-        bytes memory POOL_SYMBOL = abi.encodePacked("MOON-V1-", symbol1, "-", symbol2);
+        // bytes memory POOL_NAME = abi.encodePacked("Mooniswap V1 (", symbol1, "-", symbol2, ")");
+        // bytes memory POOL_SYMBOL = abi.encodePacked("MOON-V1-", symbol1, "-", symbol2);
 
-        pair = address(new Mooniswap{salt: salt}(string(POOL_NAME),string(POOL_SYMBOL)));
+        pair = address(new Mooniswap{salt: salt}());
         IMooniswap(pair).initialize(tokens);
         IMooniswap(pair).transferOwnership(owner());
         //pool.transferOwnership(owner());

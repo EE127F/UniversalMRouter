@@ -67,58 +67,58 @@ contract MooniFactoryTest is Test {
     //Reproducing MooniFactory tests
     //Some of these can be collapsed into a single test with fuzzing
 
-    function test32BytesSymbol() public {
+  //   function test32BytesSymbol() public {
 
-      //Mooniswap constructor checks for empty values.
-      bytes32 _symbol1 = bytes32('ABCDEFGH');
-      string memory _symbol2 = "Token Name ZYXW";
+  //     //Mooniswap constructor checks for empty values.
+  //     bytes32 _symbol1 = bytes32('ABCDEFGH');
+  //     string memory _symbol2 = "Token Name ZYXW";
 
-      TokenWithBytes32SymbolMock tokenBytes32 = new TokenWithBytes32SymbolMock(_symbol1);
-      TokenWithStringSymbolMock tokenStringSymbol = new TokenWithStringSymbolMock(_symbol2);
-      Mooniswap pool = Mooniswap(factory.deploy(IERC20(address(tokenBytes32)),IERC20(address(tokenStringSymbol))));
-      assertEq((pool.getTokens()).length,2);
-      
-      //A bit overcomplicated but it will help adapt these tests to create2 later, as well as add fuzzing
+  //     TokenWithBytes32SymbolMock tokenBytes32 = new TokenWithBytes32SymbolMock(_symbol1);
+  //     TokenWithStringSymbolMock tokenStringSymbol = new TokenWithStringSymbolMock(_symbol2);
+  //     Mooniswap pool = Mooniswap(factory.deploy(IERC20(address(tokenBytes32)),IERC20(address(tokenStringSymbol))));
+  //     assertEq((pool.getTokens()).length,2);
+  //     
+  //     //A bit overcomplicated but it will help adapt these tests to create2 later, as well as add fuzzing
 
-      string memory expectedPoolName = string(abi.encodePacked("Mooniswap V1 (", _symbol1, "-", _symbol2, ")"));
-      string memory expectedPoolNameReversed = string(abi.encodePacked("Mooniswap V1 (", _symbol2, "-", _symbol1, ")"));
-      string memory poolName = pool.name();
+  //     string memory expectedPoolName = string(abi.encodePacked("Mooniswap V1 (", _symbol1, "-", _symbol2, ")"));
+  //     string memory expectedPoolNameReversed = string(abi.encodePacked("Mooniswap V1 (", _symbol2, "-", _symbol1, ")"));
+  //     string memory poolName = pool.name();
 
-      (IERC20(address(tokenBytes32)) < IERC20(address(tokenStringSymbol))) ? assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolName))) : assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolNameReversed)));
-  
-      string memory expectedPoolSymbol = string(abi.encodePacked("MOON-V1-", _symbol1, "-", _symbol2));
-      string memory expectedPoolSymbolReversed = string(abi.encodePacked("MOON-V1-", _symbol2, "-", _symbol1));
-      string memory poolSymbol = pool.symbol();
+  //     (IERC20(address(tokenBytes32)) < IERC20(address(tokenStringSymbol))) ? assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolName))) : assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolNameReversed)));
+  // 
+  //     string memory expectedPoolSymbol = string(abi.encodePacked("MOON-V1-", _symbol1, "-", _symbol2));
+  //     string memory expectedPoolSymbolReversed = string(abi.encodePacked("MOON-V1-", _symbol2, "-", _symbol1));
+  //     string memory poolSymbol = pool.symbol();
 
-      (IERC20(address(tokenBytes32)) < IERC20(address(tokenStringSymbol))) ? assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbol))) : assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbolReversed)));
-  
-    }
+  //     (IERC20(address(tokenBytes32)) < IERC20(address(tokenStringSymbol))) ? assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbol))) : assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbolReversed)));
+  // 
+  //   }
 
-    function test33CharSymbol() public {
+  //   function test33CharSymbol() public {
 
-      string memory _symbol1 = "012345678901234567890123456789123";
-      string memory _symbol2 = "XYZ";
+  //     string memory _symbol1 = "012345678901234567890123456789123";
+  //     string memory _symbol2 = "XYZ";
 
-      TokenWithStringSymbolMock tokenStringSymbol1 = new TokenWithStringSymbolMock(_symbol1);
-      TokenWithStringSymbolMock tokenStringSymbol2 = new TokenWithStringSymbolMock(_symbol2);
-      Mooniswap pool = Mooniswap(factory.deploy(IERC20(address(tokenStringSymbol1)),IERC20(address(tokenStringSymbol2))));
-      assertEq((pool.getTokens()).length,2);
-      
-      //A bit overcomplicated but it will help adapt these tests to create2 later, as well as add fuzzing
+  //     TokenWithStringSymbolMock tokenStringSymbol1 = new TokenWithStringSymbolMock(_symbol1);
+  //     TokenWithStringSymbolMock tokenStringSymbol2 = new TokenWithStringSymbolMock(_symbol2);
+  //     Mooniswap pool = Mooniswap(factory.deploy(IERC20(address(tokenStringSymbol1)),IERC20(address(tokenStringSymbol2))));
+  //     assertEq((pool.getTokens()).length,2);
+  //     
+  //     //A bit overcomplicated but it will help adapt these tests to create2 later, as well as add fuzzing
 
-      string memory expectedPoolName = string(abi.encodePacked("Mooniswap V1 (", _symbol1, "-", _symbol2, ")"));
-      string memory expectedPoolNameReversed = string(abi.encodePacked("Mooniswap V1 (", _symbol2, "-", _symbol1, ")"));
-      string memory poolName = pool.name();
+  //     string memory expectedPoolName = string(abi.encodePacked("Mooniswap V1 (", _symbol1, "-", _symbol2, ")"));
+  //     string memory expectedPoolNameReversed = string(abi.encodePacked("Mooniswap V1 (", _symbol2, "-", _symbol1, ")"));
+  //     string memory poolName = pool.name();
 
-      (IERC20(address(tokenStringSymbol2)) < IERC20(address(tokenStringSymbol2))) ? assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolName))) : assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolNameReversed)));
-  
-      string memory expectedPoolSymbol = string(abi.encodePacked("MOON-V1-", _symbol1, "-", _symbol2));
-      string memory expectedPoolSymbolReversed = string(abi.encodePacked("MOON-V1-", _symbol2, "-", _symbol1));
-      string memory poolSymbol = pool.symbol();
+  //     (IERC20(address(tokenStringSymbol2)) < IERC20(address(tokenStringSymbol2))) ? assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolName))) : assertEq32(bytes32(bytes(poolName)),bytes32(bytes(expectedPoolNameReversed)));
+  // 
+  //     string memory expectedPoolSymbol = string(abi.encodePacked("MOON-V1-", _symbol1, "-", _symbol2));
+  //     string memory expectedPoolSymbolReversed = string(abi.encodePacked("MOON-V1-", _symbol2, "-", _symbol1));
+  //     string memory poolSymbol = pool.symbol();
 
-      (IERC20(address(tokenStringSymbol1)) < IERC20(address(tokenStringSymbol2))) ? assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbol))) : assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbolReversed)));
-  
-    }  
+  //     (IERC20(address(tokenStringSymbol1)) < IERC20(address(tokenStringSymbol2))) ? assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbol))) : assertEq32(bytes32(bytes(poolSymbol)),bytes32(bytes(expectedPoolSymbolReversed)));
+  // 
+  //   }  
 
     function testTokenEmptyString() public {
 

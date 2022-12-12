@@ -1,9 +1,8 @@
 pragma solidity ^0.8.0;
 
 import {SafeMath, IERC20} from "../Mooniswap.sol";
-import {Create2} from "lib/openzeppelin-contracts/contracts/utils/Create2.sol";
+import {Create2} from "src/libraries/Create2.sol";
 //import {IERC20} from "../interfaces/IERC20.sol";
-
 
 
 library MathLib {

@@ -102,7 +102,7 @@ contract Mooniswap is ERC20, ReentrancyGuard, Ownable {
     mapping(IERC20 => SwapVolumes) public volumes;
     mapping(IERC20 => VirtualBalance.Data) public virtualBalancesForAddition;
     mapping(IERC20 => VirtualBalance.Data) public virtualBalancesForRemoval;
-    constructor(string memory _name, string memory _symbol) public ERC20(_name, _symbol) {
+    constructor() public ERC20("MooniC2LP","MOONCLP" ) {
         factory = IFactory(msg.sender);
         uint chainId;
         assembly {

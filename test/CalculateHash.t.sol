@@ -35,10 +35,11 @@ contract CalculateHash is Test {
 
       factory = new MooniFactory();
       factory.setFee(0.003e18);
-
+      console.logAddress(factory.deploy(mockToken0,mockToken1));
   }
 
   bytes32 constant internal INIT_CODE_HASH = keccak256(type(Mooniswap).creationCode);
+   
     /**
      * @dev Returns the address where a contract will be stored if deployed via {deploy}. Any change in the
      * `bytecodeHash` or `salt` will result in a new destination address.
@@ -88,15 +89,22 @@ contract CalculateHash is Test {
     function pairFor(address tokenA, address tokenB) public view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
         bytes memory bytecode = type(Mooniswap).creationCode;
-        pair = address(uint160(bytes20(keccak256(abi.encodePacked(
-                bytes1(0xff),///// or hex'ff'
-                address(this),
-                keccak256(abi.encodePacked(token0, token1)),
-                keccak256(bytecode)
-                 
-            )))));
+ 
+        pair = computeAddress(
+        keccak256(abi.encodePacked(token0, token1)),
+        keccak256(bytecode),
+        address(factory)
+        );  
+      }  
+        // pair = address(uint160(bytes20(keccak256(abi.encodePacked(
+        //         bytes1(0xff),///// or hex'ff'
+        //         address(factory),
+        //         keccak256(abi.encodePacked(IERC20(token0), IERC20(token1))),
+        //         keccak256(bytecode)
+        //          
+        //     )))));
        
-    }
+    // }
 
     // function pairFor2(address tokenA, address tokenB) public view returns (address pair) {
     //     (address token0, address token1) = sortTokens(tokenA, tokenB);
@@ -133,21 +141,21 @@ contract CalculateHash is Test {
 
   function testHash() public {
 
-    console.logString("INIT_CODE_HASH: ");
-    console.logBytes32(INIT_CODE_HASH);
+    // console.logString("INIT_CODE_HASH: ");
+    // console.logBytes32(INIT_CODE_HASH);
     bytes memory PAIR_INIT_CODE = type(Mooniswap).creationCode;
     bytes32 PAIR_INIT_CODE_HASH = bytes32(keccak256(abi.encode(PAIR_INIT_CODE)));
     bytes32 PAIR_INIT_CODE_HASH2 = bytes32(keccak256(abi.encodePacked(PAIR_INIT_CODE)));
 
     (address token0, address token1) = sortTokens(address(mockToken0), address(mockToken1));
-    
-    address computed = computeAddress(
-      keccak256(abi.encodePacked(token0, token1)),
-      INIT_CODE_HASH,
-      address(factory)
-    );  
-    console.logString("computeAddress:");
-    console.logAddress(computed);
+    // 
+    // address computed = computeAddress(
+    //   keccak256(abi.encodePacked(token0, token1)),
+    //   INIT_CODE_HASH,
+    //   address(factory)
+    // );  
+    // console.logString("computeAddress:");
+    // console.logAddress(computed);
 
     console.logString("pairFor:");
     console.logAddress(pairFor(address(mockToken0),address(mockToken1)));
