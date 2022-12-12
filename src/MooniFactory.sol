@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 
 import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import {Create2} from "src/libraries/Create2.sol";
+import {PairInitCode} from "src/libraries/PairInitCode.sol";
 import "./libraries/UniERC20.sol";
 import "./Mooniswap.sol";
 import "./interfaces/IMooniswap.sol";
@@ -40,11 +41,12 @@ contract MooniFactory is Ownable {
     }
     function pairFor(address tokenA, address tokenB) public view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
-        bytes memory bytecode = type(Mooniswap).creationCode;
+        // bytes memory bytecode = type(Mooniswap).creationCode;
+        bytes32 PAIR_INIT_CODE_HASH = PairInitCode.PAIR_INIT_CODE_HASH;
  
         pair = Create2.computeAddress(
         keccak256(abi.encodePacked(token0, token1)),
-        keccak256(bytecode),
+        PAIR_INIT_CODE_HASH,
         address(this)
         );  
       }  
