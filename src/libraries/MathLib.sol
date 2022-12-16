@@ -2,6 +2,7 @@ pragma solidity ^0.8.0;
 
 import {SafeMath, IERC20} from "../Mooniswap.sol";
 import {Create2} from "src/libraries/Create2.sol";
+import {PairInitCode} from "src/libraries/PairInitCode.sol";
 //import {IERC20} from "../interfaces/IERC20.sol";
 
 
@@ -14,19 +15,29 @@ library MathLib {
         (token0, token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0), 'UniswapV2Library: ZERO_ADDRESS');
     }
-
-    // calculates the CREATE2 address for a pair without making any external calls
-    function pairFor(address tokenA, address tokenB) public view returns (address pair) {
+    function pairFor(address _factory,address tokenA, address tokenB) public view returns (address pair) {
         (address token0, address token1) = sortTokens(tokenA, tokenB);
-        pair = address(uint160(bytes20(keccak256(abi.encodePacked(
-                bytes1(0xff),///// or hex'ff'
-                address(this),
-                keccak256(abi.encodePacked(token0, token1)),
-                hex'f6b7a53515d4dff4d63558837a72095dc587e3f77f73911d4ced3c28149f2fcd' // init code hash
+        // bytes memory bytecode = type(Mooniswap).creationCode;
+        bytes32 PAIR_INIT_CODE_HASH = PairInitCode.PAIR_INIT_CODE_HASH;
+ 
+        pair = Create2.computeAddress(
+        keccak256(abi.encodePacked(token0, token1)),
+        PAIR_INIT_CODE_HASH,
+        _factory
+        );  
+      }
+    // // calculates the CREATE2 address for a pair without making any external calls
+    // function pairFor(address tokenA, address tokenB) public view returns (address pair) {
+    //     (address token0, address token1) = sortTokens(tokenA, tokenB);
+    //     pair = address(uint160(bytes20(keccak256(abi.encodePacked(
+    //             bytes1(0xff),///// or hex'ff'
+    //             address(this),
+    //             keccak256(abi.encodePacked(token0, token1)),
+    //             PairInitCode.PAIR_INIT_CODE_HASH
 
-            )))));
-       
-    }
+    //         )))));
+    //    
+    // }
     // fetches and sorts the reserves for a pair
     function getReserves(address mooniswapPair, address tokenA, address tokenB) internal view returns (uint reserveA, uint reserveB) {
         (address token0,) = sortTokens(tokenA, tokenB);
