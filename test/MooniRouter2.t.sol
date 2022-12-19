@@ -84,50 +84,49 @@ contract TestMooniV2Router is DSTest {
         assertEq(MathLib.pairFor(address(factory),address(token0),address(token1)),pair);
     }
 
-    // function testAddLiquidityNoPair() public {
-    //     token0.approve(address(router), 1 ether);
-    //     token1.approve(address(router), 1 ether);
+    function testAddLiquidityNoPair() public {
+        token0.approve(address(router), 1 ether);
+        token1.approve(address(router), 1 ether);
 
-    //     (address _token0, address _token1) = UnifapV2Library.sortPairs(
-    //         address(token0),
-    //         address(token1)
-    //     );
+        (address _token0, address _token1) = MathLib.sortTokens(
+            address(token0),
+            address(token1)
+        );
 
-    //     address pair = UnifapV2Library.pairFor(
-    //         address(factory),
-    //         _token0,
-    //         _token1
-    //     );
+        address pair = MathLib.pairFor(
+            address(factory),
+            _token0,
+            _token1
+        );
 
-    //     (uint256 amount0, uint256 amount1, uint256 liquidity) = router
-    //         .addLiquidity(
-    //             address(token0),
-    //             address(token1),
-    //             1 ether,
-    //             1 ether,
-    //             1 ether,
-    //             1 ether,
-    //             address(this),
-    //             block.timestamp + 1
-    //         );
+        (uint256 liquidity) = router
+            .addLiquidity(
+                address(token0),
+                address(token1),
+                1 ether,
+                1 ether,
+                1 ether,
+                1 ether,
+                address(this)
+            );
 
-    //     assertEq(amount0, 1 ether);
-    //     assertEq(amount1, 1 ether);
-    //     assertEq(liquidity, 1 ether - UnifapV2Pair(pair).MINIMUM_LIQUIDITY());
+        // assertEq(amount0, 1 ether);
+        // assertEq(amount1, 1 ether);
+        // assertEq(liquidity, 1 ether - UnifapV2Pair(pair).MINIMUM_LIQUIDITY());
 
-    //     assertEq(factory.pairs(address(token0), address(token1)), pair);
-    //     assertEq(UnifapV2Pair(pair).token0(), address(token0));
-    //     assertEq(UnifapV2Pair(pair).token1(), address(token1));
+        // assertEq(factory.pairs(address(token0), address(token1)), pair);
+        // assertEq(UnifapV2Pair(pair).token0(), address(token0));
+        // assertEq(UnifapV2Pair(pair).token1(), address(token1));
 
-    //     (uint256 reserve0, uint256 reserve1, ) = UnifapV2Pair(pair)
-    //         .getReserves();
-    //     assertEq(reserve0, 1 ether);
-    //     assertEq(reserve1, 1 ether);
-    //     assertEq(token0.balanceOf(address(pair)), 1 ether);
-    //     assertEq(token1.balanceOf(address(pair)), 1 ether);
-    //     assertEq(token0.balanceOf(address(this)), 9 ether);
-    //     assertEq(token1.balanceOf(address(this)), 9 ether);
-    // }
+        // (uint256 reserve0, uint256 reserve1, ) = Mooniswap(pair)
+        //     .getReserves();
+        // assertEq(reserve0, 1 ether);
+        // assertEq(reserve1, 1 ether);
+        // assertEq(token0.balanceOf(address(pair)), 1 ether);
+        // assertEq(token1.balanceOf(address(pair)), 1 ether);
+        // assertEq(token0.balanceOf(address(this)), 9 ether);
+        // assertEq(token1.balanceOf(address(this)), 9 ether);
+    }
 
     // function testAddLiquidityInsufficientAmountB() public {
     //     token0.approve(address(router), 4 ether);
