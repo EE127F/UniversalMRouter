@@ -227,7 +227,7 @@ contract MooniRouter {
 
             IERC20(input).approve(pair, amountIn);
          //   if(input == token0) {
-                IMooniswap(pair).swap(IERC20(input), IERC20(output), amountIn, amountIn/100, referral);
+                IMooniswap(pair).swap(IERC20(input), IERC20(output), amountIn, 0, referral);
             // }else {
             //     IMooniswap(pair).swap(IERC20(input), IERC20(output), amount0Out, amount0Out, referral);
             // }
