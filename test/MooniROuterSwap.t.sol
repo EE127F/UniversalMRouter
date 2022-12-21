@@ -57,7 +57,7 @@ contract TestMooniRouterSwap is DSTest {
         assertTrue(liquidity12>0);
 
         uint amountToken0Before = token0.balanceOf(address(this));
-        uint amountToken2Before = token2.balanceOf(address(this));
+        uint amountToken2Before = token1.balanceOf(address(this));
 
         address pair01 = factory.pairFor(address(token0), address(token1));
         uint reserve0 = token0.balanceOf(pair01);
@@ -65,15 +65,15 @@ contract TestMooniRouterSwap is DSTest {
         assertTrue(reserve0 == 75 ether);
         assertTrue(reserve1 == 75 ether);
 
-        address[] memory path = new address[](3);
+        address[] memory path = new address[](2);
         path[0] = address(token0);
         path[1] = address(token1);
-        path[2] = address(token2);
+        //path[2] = address(token2);
 
-        router.swapTokensForExactTokens(10**24, 10**11, path, address(this), address(this));
+        router.swapExactTokensForTokens(10**24, 10**11, path, address(this), address(this));
 
         uint amountToken0After = token0.balanceOf(address(this));
-        uint amountToken2After = token2.balanceOf(address(this));
+        uint amountToken2After = token1.balanceOf(address(this));
 
         assertTrue(amountToken0After < amountToken0Before);
         assertTrue(amountToken2After > amountToken2Before);
