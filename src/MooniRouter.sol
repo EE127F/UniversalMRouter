@@ -223,6 +223,7 @@ contract MooniRouter {
           //  (address token0,) = MathLib.sortTokens(input, output);
             uint amountIn = amounts[i];
             uint amountOut = amounts[i + 1];
+            //IMooniswap(pair)._getReturn(input, output, uint256 amount, uint256 srcBalance, uint256 dstBalance)
            // (uint amount0Out, uint amount1Out) = input == token0 ? (uint(0), amountOut) : (amountOut, uint(0));
 
             IERC20(input).approve(pair, amountIn);
@@ -335,11 +336,11 @@ contract MooniRouter {
         return MathLib.getAmountIn(amountOut, reserveIn, reserveOut);
     }
 
-    function getAmountsOut(uint amountIn, address[] memory path) public view  returns (uint[] memory amounts) {
+    function getAmountsOut(uint amountIn, address[] memory path) public   returns (uint[] memory amounts) {
         return MathLib.getAmountsOut(factory, amountIn, path);
     }
 
-    function getAmountsIn(uint amountOut, address[] memory path) public view  returns (uint[] memory amounts) {
+    function getAmountsIn(uint amountOut, address[] memory path) public   returns (uint[] memory amounts) {
         return MathLib.getAmountsIn(factory, amountOut, path);
     }
 }

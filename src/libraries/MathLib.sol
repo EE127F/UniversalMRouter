@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import {SafeMath, IERC20} from "../Mooniswap.sol";
 import {Create2} from "src/libraries/Create2.sol";
 import {PairInitCode} from "src/libraries/PairInitCode.sol";
-//import {IERC20} from "../interfaces/IERC20.sol";
+import "../interfaces/IMooniswap.sol";
 
 
 library MathLib {
@@ -39,12 +39,12 @@ library MathLib {
     //    
     // }
     // fetches and sorts the reserves for a pair
-    function getReserves(address factory, address tokenA, address tokenB) internal view returns (uint reserveA, uint reserveB) {
-        (address token0,) = sortTokens(tokenA, tokenB);
+    function getReserves(address factory, address tokenA, address tokenB) internal returns (uint reserve0, uint reserve1 ) {
+      
         address mooniswapPair = pairFor(factory, tokenA, tokenB);
         uint reserve0 = IERC20(tokenA).balanceOf(mooniswapPair);
         uint reserve1 = IERC20(tokenB).balanceOf(mooniswapPair);
-        (reserveA, reserveB) = tokenA == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
+        
     }
 
     // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
@@ -74,18 +74,19 @@ library MathLib {
     }
 
     // performs chained getAmountOut calculations on any number of pairs
-    function getAmountsOut(address factory, uint amountIn, address[] memory path) internal view returns (uint[] memory amounts) {
+    function getAmountsOut(address factory, uint amountIn, address[] memory path) internal  returns (uint[] memory amounts) {
         require(path.length >= 2, 'INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[0] = amountIn;
         for (uint i; i < path.length - 1; i++) {
-            (uint reserveIn, uint reserveOut) = getReserves(factory, path[i], path[i + 1]);
-            amounts[i + 1] = getAmountOut(amounts[i], reserveIn, reserveOut);
+            address mooniswapPair = pairFor(factory,path[i], path[i + 1]);
+            
+            amounts[i + 1] =IMooniswap(mooniswapPair).getReturn(IERC20(path[i]), IERC20(path[i + 1]), amounts[i]);
         }
     }
 
     // performs chained getAmountIn calculations on any number of pairs
-    function getAmountsIn(address factory, uint amountOut, address[] memory path) internal view returns (uint[] memory amounts) {
+    function getAmountsIn(address factory, uint amountOut, address[] memory path) internal  returns (uint[] memory amounts) {
         require(path.length >= 2, 'INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[amounts.length - 1] = amountOut;

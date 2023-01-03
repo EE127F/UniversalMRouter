@@ -252,7 +252,7 @@ contract Mooniswap is ERC20, ReentrancyGuard, Ownable {
         Balances memory balances = Balances({
             src: src.uniBalanceOf(address(this)).sub(src.isETH() ? msg.value : 0),
             dst: dst.uniBalanceOf(address(this))
-        });
+        });///normal balanceOf of tokens
 
         // catch possible airdrops and external balance changes for deflationary tokens
         uint256 srcAdditionBalance = Math.max(virtualBalancesForAddition[src].current(balances.src), balances.src);
@@ -295,6 +295,8 @@ contract Mooniswap is ERC20, ReentrancyGuard, Ownable {
         volumes[src].confirmed += uint128(confirmed);
         volumes[src].result += uint128(result);
     }
+
+
 
     function permit(address _owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external {
         require(deadline >= block.timestamp, "EXPIRED");
