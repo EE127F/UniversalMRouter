@@ -201,21 +201,16 @@ contract MooniRouter {
         IMooniswap(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
         (amountA, amountB) = removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to);
     }
- function uuswap(uint amounts,uint amountsmin, address input, address output, address _to,  address referral) public {
-    address pair = MooniFactory(factory).pairFor( input, output);
-    IERC20(input).transferFrom(msg.sender, address(this), amounts);
-    IERC20(input).approve(pair, amounts);
-  
-    IMooniswap(pair).swap(IERC20(input), IERC20(output), amounts, amountsmin, referral);
-    uint amountOutLastPath = IERC20(output).balanceOf(address(this));
-    IERC20(output).transfer(_to, amountOutLastPath);
- }
+
         
 
     // **** SWAP ****
     // requires the initial amount to have already been sent to the first pair
     function _swap(uint[] memory amounts, address[] memory path, address _to,  address referral) private {
-        
+        uint lastIndex = path.length - 1;
+        address lastPath = path[lastIndex];
+        uint lastAmountOut = amounts[lastIndex];
+
         for (uint i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
             address pair = MooniFactory(factory).pairFor( input, output);
@@ -228,23 +223,23 @@ contract MooniRouter {
 
             IERC20(input).approve(pair, amountIn);
          //   if(input == token0) {
-                IMooniswap(pair).swap(IERC20(input), IERC20(output), amountIn, 0, referral);
+            IMooniswap(pair).swap(IERC20(input), IERC20(output), amountIn, 0, referral);
             // }else {
             //     IMooniswap(pair).swap(IERC20(input), IERC20(output), amount0Out, amount0Out, referral);
             // }
             
         }
-        uint lastIndex = path.length - 1;
-        address lastPath = path[lastIndex];
         
+
+
         if(lastPath == WETH ) {
-            uint amountOutLastPath = IWETH(WETH).balanceOf(address(this));
-            IWETH(WETH).withdraw(amountOutLastPath);
-            TransferHelper.safeTransferETH(_to,amountOutLastPath);
+         //   uint amountOutLastPath = IWETH(WETH).balanceOf(address(this));
+            IWETH(WETH).withdraw(lastAmountOut);
+            TransferHelper.safeTransferETH(_to,lastAmountOut);
         } else {
-            uint amountOutLastPath = IERC20(lastPath).balanceOf(address(this));
+//uint amountOutLastPath = IERC20(lastPath).balanceOf(address(this));
            // TransferHelper.safeTransfer(lastPath, _to, amountOutLastPath);
-            IERC20(lastPath).transfer(_to, amountOutLastPath);
+            IERC20(lastPath).transfer(_to, lastAmountOut);
         }
        
     }
@@ -261,18 +256,18 @@ contract MooniRouter {
 
         _swap(amounts, path, to,referral);
     }
-    function swapTokensForExactTokens(
-        uint amountOut,
-        uint amountInMax,
-        address[] calldata path,
-        address to,
-        address referral
-    ) external   returns (uint[] memory amounts) {
-        amounts = MathLib.getAmountsIn(factory, amountOut, path);
-        require(amounts[0] <= amountInMax,"EXCESSIVE_INPUT_AMOUNT");
-        IERC20(path[0]).transferFrom(msg.sender, address(this), amountOut);
-       _swap(amounts, path, to,referral);
-    }
+    // function swapTokensForExactTokens(
+    //     uint amountOut,
+    //     uint amountInMax,
+    //     address[] calldata path,
+    //     address to,
+    //     address referral
+    // ) external   returns (uint[] memory amounts) {
+    //     amounts = MathLib.getAmountsIn(factory, amountOut, path);
+    //     require(amounts[0] <= amountInMax,"EXCESSIVE_INPUT_AMOUNT");
+    //     IERC20(path[0]).transferFrom(msg.sender, address(this), amountOut);
+    //    _swap(amounts, path, to,referral);
+    // }
     function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, address referral)
         external
         
@@ -286,18 +281,18 @@ contract MooniRouter {
         TransferHelper.safeTransfer(path[0], address(this), amounts[0]);
         _swap(amounts, path, to, referral);
     }
-    function swapTokensForExactETH(uint amountOut, uint amountInMax, address[] calldata path, address to, address referral)
-        external
+    // function swapTokensForExactETH(uint amountOut, uint amountInMax, address[] calldata path, address to, address referral)
+    //     external
         
-        returns (uint[] memory amounts)
-    {
-        require(path[path.length - 1] == WETH, "INVALID_PATH");
-        amounts = MathLib.getAmountsIn(factory, amountOut, path);
-        require(amounts[0] <= amountInMax, "EXCESSIVE_INPUT_AMOUNT");
-        TransferHelper.safeTransfer(path[0], address(this), amounts[0]);
-        _swap(amounts, path, address(this), referral);
+    //     returns (uint[] memory amounts)
+    // {
+    //     require(path[path.length - 1] == WETH, "INVALID_PATH");
+    //     amounts = MathLib.getAmountsIn(factory, amountOut, path);
+    //     require(amounts[0] <= amountInMax, "EXCESSIVE_INPUT_AMOUNT");
+    //     TransferHelper.safeTransfer(path[0], address(this), amounts[0]);
+    //     _swap(amounts, path, address(this), referral);
        
-    }
+    // }
     function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, address referral)
         external
         returns (uint[] memory amounts)
@@ -305,24 +300,24 @@ contract MooniRouter {
         require(path[path.length - 1] == WETH, "INVALID_PATH");
         amounts = MathLib.getAmountsOut(factory, amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, "INSUFFICIENT_OUTPUT_AMOUNT");
-        TransferHelper.safeTransfer(path[0], address(this), amounts[0]);
-        _swap(amounts, path, address(this), referral);
+       IERC20(path[0]).transferFrom(msg.sender, address(this), amountIn);
+        _swap(amounts, path, to,referral);
 
     }
-    function swapETHForExactTokens(uint amountOut, address[] calldata path, address to, address referral)
-        external
+    // function swapETHForExactTokens(uint amountOut, address[] calldata path, address to, address referral)
+    //     external
     
-        payable
-        returns (uint[] memory amounts)
-    {
-        require(path[0] == WETH, "INVALID_PATH");
-        amounts = MathLib.getAmountsIn(factory, amountOut, path);
-        require(amounts[0] <= msg.value, "EXCESSIVE_INPUT_AMOUNT");
-        IWETH(WETH).deposit{value: amounts[0]}();
-        TransferHelper.safeTransfer(path[0], address(this), amounts[0]);
-        _swap(amounts, path, to, referral);
-        if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]); // refund dust eth, if any
-    }
+    //     payable
+    //     returns (uint[] memory amounts)
+    // {
+    //     require(path[0] == WETH, "INVALID_PATH");
+    //     amounts = MathLib.getAmountsIn(factory, amountOut, path);
+    //     require(amounts[0] <= msg.value, "EXCESSIVE_INPUT_AMOUNT");
+    //     IWETH(WETH).deposit{value: amounts[0]}();
+    //     TransferHelper.safeTransfer(path[0], address(this), amounts[0]);
+    //     _swap(amounts, path, to, referral);
+    //     if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]); // refund dust eth, if any
+    // }
 
     function quote(uint amountA, uint reserveA, uint reserveB) public pure  returns (uint amountB) {
         return MathLib.quote(amountA, reserveA, reserveB);
