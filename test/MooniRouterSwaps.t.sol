@@ -21,6 +21,9 @@ contract TestMooniRouterSwap is DSTest {
     MyToken public token2;
     WETH9 public weth;
 
+        receive() external payable {}
+     fallback() external payable{}
+
     function setUp() public {
       factory = new MooniFactory();
       weth = new WETH9();
@@ -109,4 +112,45 @@ contract TestMooniRouterSwap is DSTest {
 
        assertTrue(amountToken1After > amountToken1Before);
     }
+
+       function testSwapExactTokensForETH() public {
+        (uint256 liquidity01) = router.addLiquidity(
+            address(token0),
+            address(token1),
+            75 ether,
+            75 ether,
+            75 ether,
+            75 ether,
+            address(this)
+        );
+        
+        (uint256 liquidity12) = router.addLiquidityETH{value: 75 ether}(
+            address(token0),
+            75 ether,
+            75 ether,
+            75 ether,
+            address(this)
+        );
+
+        assertTrue(liquidity01>0);
+        assertTrue(liquidity12>0);
+        assertTrue(weth.totalSupply()>0);
+
+        uint amountToken1Before = token1.balanceOf(address(this));
+        uint amountETHBefore = address(this).balance;
+
+        address[] memory path = new address[](3);
+        path[1] = address(token0);
+        path[0] = address(token1);
+        path[2] = address(weth);
+
+       router.swapExactTokensForETH(10**19,10**11, path, address(this), address(this));
+
+        uint amountToken1After = token1.balanceOf(address(this));
+        uint amountETHAfter = address(this).balance;
+
+       assertTrue(amountToken1After < amountToken1Before);
+       assertTrue(amountETHBefore < amountETHAfter );
+    }
+
 }

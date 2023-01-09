@@ -27,7 +27,8 @@ contract MooniRouter {
         WETH = _WETH;
     }
 
-    receive() external payable {}
+     receive() external payable {}
+     fallback() external payable{}
 
     // **** ADD LIQUIDITY ****
     function _addLiquidity(
