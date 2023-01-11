@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.17+commit.8df45f5f"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -1059,11 +1059,11 @@
 			]
 		},
 		"src/Mooniswap.sol": {
-			"keccak256": "0x1413cefe4e73ab62f5418a57cb4cd3022b41064674e18cd4bd27edc869b8bc38",
+			"keccak256": "0xc0b35a870c43cf3110b1a9cbacba80f7e20bc049831f6e9ca8a8a9941affc858",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://469a82bd0d6d20a1339ea2ad15cc27823ea1c78316a81c2337caaaba98d9ab77",
-				"dweb:/ipfs/QmRSF5QVYaZG5598QcSp8Jprmf7sj8EsrfiXdUsHiCKW7v"
+				"bzz-raw://23518ffef4a43e78ca7cd0307dc3b023b2a770d73cd05d2dfea58548c0d64c46",
+				"dweb:/ipfs/QmTKB7BnHQSHYj6zs1ZP6QftRpipKgoMo5EJrbD7EoAMXp"
 			]
 		},
 		"src/libraries/Sqrt.sol": {

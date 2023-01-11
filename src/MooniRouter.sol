@@ -214,6 +214,7 @@ contract MooniRouter {
 
         for (uint i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
+            require(MooniFactory(factory).pools(IERC20(input), IERC20(output)) != address(0), "INVALID_PATH");
             address pair = MooniFactory(factory).pairFor( input, output);
             
           //  (address token0,) = MathLib.sortTokens(input, output);

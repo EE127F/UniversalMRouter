@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.17+commit.8df45f5f"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -20,6 +20,10 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "fallback"
 			},
 			{
 				"inputs": [],
@@ -214,7 +218,7 @@
 						"type": "uint256[]"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -238,7 +242,7 @@
 						"type": "uint256[]"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -441,40 +445,6 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "amountOut",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address[]",
-						"name": "path",
-						"type": "address[]"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "referral",
-						"type": "address"
-					}
-				],
-				"name": "swapETHForExactTokens",
-				"outputs": [
-					{
-						"internalType": "uint256[]",
-						"name": "amounts",
-						"type": "uint256[]"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
 						"name": "amountOutMin",
 						"type": "uint256"
 					},
@@ -584,122 +554,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amountOut",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountInMax",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address[]",
-						"name": "path",
-						"type": "address[]"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "referral",
-						"type": "address"
-					}
-				],
-				"name": "swapTokensForExactETH",
-				"outputs": [
-					{
-						"internalType": "uint256[]",
-						"name": "amounts",
-						"type": "uint256[]"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amountOut",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountInMax",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address[]",
-						"name": "path",
-						"type": "address[]"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "referral",
-						"type": "address"
-					}
-				],
-				"name": "swapTokensForExactTokens",
-				"outputs": [
-					{
-						"internalType": "uint256[]",
-						"name": "amounts",
-						"type": "uint256[]"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amounts",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountsmin",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "input",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "output",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "referral",
-						"type": "address"
-					}
-				],
-				"name": "uuswap",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"stateMutability": "payable",
 				"type": "receive"
 			}
@@ -725,7 +579,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -828,19 +682,19 @@
 			]
 		},
 		"src/MooniRouter.sol": {
-			"keccak256": "0xca05c611da11fe0f6f52c3402d371d168d8b070f705c3b4207de4183f99d73d3",
+			"keccak256": "0x34693ff977a4f7d1209a746bfafbb8fd855b6951a17d45719a2b8f647cb3cd15",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ebf69a17ff0471e9a6924f5b74d416d627124f9cb670278af50bea1a43684c96",
-				"dweb:/ipfs/QmYBgb7n76AiopsUxujtKQrrQq2csBh88PjSNa1hxpS12B"
+				"bzz-raw://8be5fa31e002a01ef2ebf92857929c22db46e4a5565b91dc7f6e467861a1fadd",
+				"dweb:/ipfs/Qme88ydXCe2hocyjTny56e73t1XSnPFAbyRNcFof5WnRrS"
 			]
 		},
 		"src/Mooniswap.sol": {
-			"keccak256": "0x1413cefe4e73ab62f5418a57cb4cd3022b41064674e18cd4bd27edc869b8bc38",
+			"keccak256": "0xc0b35a870c43cf3110b1a9cbacba80f7e20bc049831f6e9ca8a8a9941affc858",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://469a82bd0d6d20a1339ea2ad15cc27823ea1c78316a81c2337caaaba98d9ab77",
-				"dweb:/ipfs/QmRSF5QVYaZG5598QcSp8Jprmf7sj8EsrfiXdUsHiCKW7v"
+				"bzz-raw://23518ffef4a43e78ca7cd0307dc3b023b2a770d73cd05d2dfea58548c0d64c46",
+				"dweb:/ipfs/QmTKB7BnHQSHYj6zs1ZP6QftRpipKgoMo5EJrbD7EoAMXp"
 			]
 		},
 		"src/interfaces/IMooniswap.sol": {
@@ -868,10 +722,10 @@
 			]
 		},
 		"src/libraries/MathLib.sol": {
-			"keccak256": "0xb416fa43b9cea32eaf9003a03403273aca6c66a92eb4ac96bcfcbffccc6965f7",
+			"keccak256": "0x16df1bd96364732251339244620d48a0fe23e0e2da49d6bbc921e892108315d6",
 			"urls": [
-				"bzz-raw://25522ca3a7b2bac2983ddb5037788aa817140347d9ad08f6e7a30288e28be35e",
-				"dweb:/ipfs/Qmd3qiaFLk4EgnkijM5XWmcy5nMTXoGyG9v5WRYv25XtpV"
+				"bzz-raw://afde14c2a313a7aee253e9f0dbfdc3758b219a5c7e5576cd1400022bd40ff00e",
+				"dweb:/ipfs/QmTQrqanFGwAqG2ivBMHnHCiBTp9azUEFAtuf9XVgHTMQ4"
 			]
 		},
 		"src/libraries/PairInitCode.sol": {
